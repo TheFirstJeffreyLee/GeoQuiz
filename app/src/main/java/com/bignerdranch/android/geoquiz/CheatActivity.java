@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,11 +15,22 @@ public class CheatActivity extends AppCompatActivity {
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
     private Button mShowAnswer;
+    private boolean mWasShown;
+
+    private static final String TAG = "CheatActivity";
+    private static final String KEY_SHOWN_BOOLEAN = "shown_boolean";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
+
+        if (savedInstanceState != null) {
+            boolean shown = savedInstanceState.getBoolean(KEY_SHOWN_BOOLEAN, false);
+            if (shown) {
+                setAnswerShownResult(true);
+            }
+        }
 
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mAnswerTextView = (TextView) findViewById(R.id.answer_text_view);
@@ -37,6 +49,13 @@ public class CheatActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putBoolean(KEY_SHOWN_BOOLEAN, mWasShown);
+    }
+
     public static boolean wasAnswerShown(Intent result){
         return result.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
     }
@@ -44,6 +63,7 @@ public class CheatActivity extends AppCompatActivity {
     private void setAnswerShownResult(boolean isAnswerShown) {
         Intent data = new Intent();
         data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        mWasShown = true;
         setResult(RESULT_OK, data);
     }
 
