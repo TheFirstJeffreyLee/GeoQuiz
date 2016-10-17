@@ -18,11 +18,15 @@ public class CheatActivity extends AppCompatActivity {
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
     private Button mShowAnswer;
+    private TextView mApiVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
+
+        mApiVersion = (TextView) findViewById(R.id.api_version);
+        mApiVersion.setText("API level "+Build.VERSION.SDK_INT);
 
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mAnswerTextView = (TextView) findViewById(R.id.answer_text_view);
